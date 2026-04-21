@@ -146,4 +146,4 @@ If you have any questions or suggestions, feel free to open an issue or reach ou
 
 ---
 
-**Made with ❤️ using Node.js**
+**Made using Node.js**
