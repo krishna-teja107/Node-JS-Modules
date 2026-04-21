@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Module Demo</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <nav>
+            <ul>
+                <li><a href="/">🏠 Home</a></li>
+                <li><a href="/os">💻 OS Info</a></li>
+                <li><a href="/path">📁 Path Info</a></li>
+                <li><a href="/event">⚡ Event Demo</a></li>
+            </ul>
+        </nav>
+        <main>
+            <h1>⚡ Event-Driven Programming Demo</h1>
+            <p>Experience the power of Node.js event-driven architecture. Each page visit triggers an event that gets logged on the server. Click the button below to trigger additional events and see them in real-time!</p>
+            <button id="triggerEvent" class="btn">⚡ Trigger Event</button>
+            <div id="eventLog" class="event-log">
+                <p>🎯 Event triggered at: <span id="lastEvent">Page load</span></p>
+            </div>
+        </main>
+        <footer>
+            <p>Built using Node.js | <a href="https://nodejs.org" target="_blank">Learn More</a></p>
+        </footer>
+    </div>
+    <script>
+        document.getElementById('lastEvent').textContent = 'Page load';
+        document.getElementById('triggerEvent').addEventListener('click', function() {
+            // Add loading state
+            const btn = document.getElementById('triggerEvent');
+            const originalText = btn.textContent;
+            btn.textContent = '⏳ Triggering...';
+            btn.disabled = true;
+
+            fetch('/event')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('lastEvent').textContent = new Date().toLocaleString();
+                    // Reset button
+                    btn.textContent = originalText;
+                    btn.disabled = false;
+                    // Add success animation
+                    btn.style.animation = 'bounceIn 0.6s ease-out';
+                    setTimeout(() => btn.style.animation = '', 600);
+                })
+                .catch(error => {
+                    console.error('Error triggering event:', error);
+                    btn.textContent = originalText;
+                    btn.disabled = false;
+                });
+        });
+    </script>
+</body>
+</html>

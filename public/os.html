@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OS Module Info</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <nav>
+            <ul>
+                <li><a href="/">🏠 Home</a></li>
+                <li><a href="/os">💻 OS Info</a></li>
+                <li><a href="/path">📁 Path Info</a></li>
+                <li><a href="/event">⚡ Event Demo</a></li>
+            </ul>
+        </nav>
+        <main>
+            <h1>💻 Operating System Information</h1>
+            <p>Discover detailed information about your system's operating environment and hardware specifications.</p>
+            <div class="info-container">
+                <div class="info-item">
+                    <strong>🖥️ Platform:</strong> <span id="platform" class="loading">Loading...</span>
+                </div>
+                <div class="info-item">
+                    <strong>⚙️ CPU Architecture:</strong> <span id="arch" class="loading">Loading...</span>
+                </div>
+                <div class="info-item">
+                    <strong>🧠 Free Memory:</strong> <span id="freemem" class="loading">Loading...</span>
+                </div>
+                <div class="info-item">
+                    <strong>💾 Total Memory:</strong> <span id="totalmem" class="loading">Loading...</span>
+                </div>
+            </div>
+        </main>
+        <footer>
+            <p>Built using Node.js | <a href="https://nodejs.org" target="_blank">Learn More</a></p>
+        </footer>
+    </div>
+    <script>
+        // Data is populated server-side
+    </script>
+</body>
+</html>
