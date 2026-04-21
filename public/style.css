@@ -84,10 +84,11 @@ nav a:hover::before {
     left: 100%;
 }
 
-nav a:hover {
-    background: rgba(255, 255, 255, 0.1);
+nav a:hover, nav a.active {
+    background: rgba(255, 255, 255, 0.2);
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 /* Main Content */

@@ -30,7 +30,31 @@ function serveFile(filePath, contentType, res) {
         res.end(data);
     });
 }
+// Function to serve HTML with navigation highlighting
+function serveHTMLWithNav(filePath, currentPage, res) {
+    fs.readFile(filePath, 'utf8', (err, data) => {
+        if (err) {
+            res.writeHead(404, { 'Content-Type': 'text/html' });
+            res.end('<h1>404 - Page Not Found</h1>');
+            return;
+        }
 
+        // Add active class to current page nav item
+        const navReplacements = {
+            'href="/">🏠 Home': currentPage === 'home' ? 'href="/" class="active">🏠 Home' : 'href="/">🏠 Home',
+            'href="/os">💻 OS Info': currentPage === 'os' ? 'href="/os" class="active">💻 OS Info' : 'href="/os">💻 OS Info',
+            'href="/path">📁 Path Info': currentPage === 'path' ? 'href="/path" class="active">📁 Path Info' : 'href="/path">📁 Path Info',
+            'href="/event">⚡ Event Demo': currentPage === 'event' ? 'href="/event" class="active">⚡ Event Demo' : 'href="/event">⚡ Event Demo'
+        };
+
+        for (const [oldText, newText] of Object.entries(navReplacements)) {
+            data = data.replace(oldText, newText);
+        }
+
+        res.writeHead(200, { 'Content-Type': 'text/html' });
+        res.end(data);
+    });
+}
 // Function to serve dynamic HTML with data injection
 function serveDynamicHTML(filePath, replacements, res) {
     fs.readFile(filePath, 'utf8', (err, data) => {
@@ -57,22 +81,17 @@ const server = http.createServer((req, res) => {
     const url = req.url;
 
     if (url === '/') {
-        serveFile('./public/index.html', 'text/html', res);
+        serveHTMLWithNav('./public/index.html', 'home', res);
     }
 
     else if (url === '/os') {
-        const replacements = {
-            'Loading\\.\\.\\.': `${os.platform()}`,
-            'Loading\\.\\.\\.': `${os.arch()}`,
-            'Loading\\.\\.\\.': `${(os.freemem() / 1024 / 1024).toFixed(2)} MB`,
-            'Loading\\.\\.\\.': `${(os.totalmem() / 1024 / 1024).toFixed(2)} MB`
-        };
-        // Since there are multiple, need to be careful. Better to use specific placeholders.
         let html = fs.readFileSync('./public/os.html', 'utf8');
-        html = html.replace('Loading...', os.platform());
-        html = html.replace('Loading...', os.arch());
-        html = html.replace('Loading...', `${(os.freemem() / 1024 / 1024).toFixed(2)} MB`);
-        html = html.replace('Loading...', `${(os.totalmem() / 1024 / 1024).toFixed(2)} MB`);
+        // Add active nav class
+        html = html.replace('href="/os">💻 OS Info', 'href="/os" class="active">💻 OS Info');
+        html = html.replace('PLATFORM_PLACEHOLDER', os.platform());
+        html = html.replace('ARCH_PLACEHOLDER', os.arch());
+        html = html.replace('FREEMEM_PLACEHOLDER', `${(os.freemem() / 1024 / 1024).toFixed(2)} MB`);
+        html = html.replace('TOTALMEM_PLACEHOLDER', `${(os.totalmem() / 1024 / 1024).toFixed(2)} MB`);
         res.writeHead(200, { 'Content-Type': 'text/html' });
         res.end(html);
     }
@@ -80,9 +99,11 @@ const server = http.createServer((req, res) => {
     else if (url === '/path') {
         const filePath = __filename;
         let html = fs.readFileSync('./public/path.html', 'utf8');
-        html = html.replace('Loading...', path.basename(filePath));
-        html = html.replace('Loading...', path.dirname(filePath));
-        html = html.replace('Loading...', path.extname(filePath));
+        // Add active nav class
+        html = html.replace('href="/path">📁 Path Info', 'href="/path" class="active">📁 Path Info');
+        html = html.replace('BASENAME_PLACEHOLDER', path.basename(filePath));
+        html = html.replace('DIRNAME_PLACEHOLDER', path.dirname(filePath));
+        html = html.replace('EXTNAME_PLACEHOLDER', path.extname(filePath));
         res.writeHead(200, { 'Content-Type': 'text/html' });
         res.end(html);
     }
@@ -92,7 +113,11 @@ const server = http.createServer((req, res) => {
         // 🔥 Trigger specific event
         eventEmitter.emit('event_page_visited', new Date().toLocaleString());
 
-        serveFile('./public/event.html', 'text/html', res);
+        let html = fs.readFileSync('./public/event.html', 'utf8');
+        // Add active nav class
+        html = html.replace('href="/event">⚡ Event Demo', 'href="/event" class="active">⚡ Event Demo');
+        res.writeHead(200, { 'Content-Type': 'text/html' });
+        res.end(html);
     }
 
     else if (url === '/style.css') {
